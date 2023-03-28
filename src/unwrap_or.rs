@@ -1,29 +1,12 @@
-enum Unwrappable<T, E = ()> {
-    Option(Option<T>),
-    Result(Result<T, E>),
-}
-
-impl<T> From<Option<T>> for Unwrappable<T> {
-    fn from(value: Option<T>) -> Self {
-        Unwrappable::Option(value)
-    }
-}
-
-impl<T, E> From<Result<T, E>> for Unwrappable<T, E> {
-    fn from(value: Result<T, E>) -> Self {
-        Unwrappable::Result(value)
-    }
-}
-
 pub macro unwrap_or($expr:expr, $default:expr) {{
-    match Unwrappable::from($expr) {
-        Unwrappable::Option(Some(v)) | Unwrappable::Result(Ok(v)) => v,
+    match crate::Unwrappable::from($expr) {
+        crate::Unwrappable::Option(Some(v)) | crate::Unwrappable::Result(Ok(v)) => v,
         _ => $default,
     }
 }}
 
 #[cfg(test)]
-mod unwrap_or_test {
+mod test {
     use super::unwrap_or;
 
     #[test]
